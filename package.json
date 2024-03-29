@@ -1,0 +1,39 @@
+{
+  "name": "custom-form-builder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server",
+    "server": "nodemon backend/server.js",
+    "server-inspect": "nodemon --inspect backend/server",
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "inspect": "concurrently \"npm run server-inspect\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Anushdev65/custom-form-builder.git"
+  },
+  "author": "anushDev",
+  "type": "module",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Anushdev65/custom-form-builder/issues"
+  },
+  "homepage": "https://github.com/Anushdev65/custom-form-builder#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "joi": "^17.12.2",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.9.3",
+    "sequelize": "^6.37.1"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
