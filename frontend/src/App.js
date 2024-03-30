@@ -1,24 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { Route, Routes, Navigate } from "react-router-dom";
+import SignUpScreen from "./screens/SignUpScreen";
+import ProtectedRoute from "./utils/ProtectedRoute";
+import LoginFormScreen from "./screens/LoginFormScreen";
+import { HomeScreen } from "./screens/organizationViewScreen/HomeScreen";
+import { FormFieldsScreen } from "./screens/organizationViewScreen/FormFieldsScreen";
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      {/* setting login page as our landing page of the app */}
+      <Route path="/" element={<Navigate to="/login" />} />
+
+      <Route element={<ProtectedRoute />}>
+        <Route path="/org-home" element={<HomeScreen />} />
+        <Route path="/form-field" element={<FormFieldsScreen />} />
+      </Route>
+
+      <Route path="/register" element={<SignUpScreen />} />
+      <Route path="/login" element={<LoginFormScreen />} />
+    </Routes>
   );
 }
 
