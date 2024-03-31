@@ -15,53 +15,6 @@ import getTokenExpiryTime from "../utils/getTokenExpiryTime.js";
 import { comparePassword, hashPassword } from "../utils/hashFunction.js";
 import { throwError } from "../utils/throwError.js";
 import { generateToken } from "../utils/token.js";
-
-// export const createUser = tryCatchWrapper(async (req, res) => {
-//   const { name, email, password, role, organizationId } = req.body;
-
-//   let existingUser = await User.findOne({ where: { email } });
-//   let passwordHash = await hashPassword(password);
-
-//   if (existingUser) {
-//     throwError({
-//       message: "Duplicate email",
-//       statusCode: HttpStatus.UNAUTHORIZED,
-//     });
-//   } else {
-//     //create organization
-
-//     let newUser = await User.create({
-//       name,
-//       email,
-//       password: passwordHash,
-//       role,
-//       organizationId,
-//     });
-//     console.log(newUser);
-//     let infoObj = { userId: newUser.id };
-//     let token = await generateToken(infoObj, secretKey, expiryIn);
-//     console.log(existingUser);
-//     console.log(token);
-
-//     let tokenData = {
-//       token: token,
-//       userId: newUser.id,
-//       type: tokenTypes.ACCESS,
-//       expiration: getTokenExpiryTime(token).toLocaleString(),
-//     };
-
-//     await Token.create(tokenData);
-
-//     successResponseData({
-//       res,
-//       message: "User created successfully",
-//       statusCode: HttpStatus.CREATED,
-//       tokenData,
-//       token,
-//     });
-//   }
-// });
-
 export const createUser = tryCatchWrapper(async (req, res) => {
   const { name, email, password, role, organizationId } = req.body;
 
@@ -73,44 +26,58 @@ export const createUser = tryCatchWrapper(async (req, res) => {
       message: "Duplicate email",
       statusCode: HttpStatus.UNAUTHORIZED,
     });
-  } else {
-    let newUser = await User.create({
+  }
+
+  let newUser; // Declare newUser variable outside the if block
+
+  if (role === "organization") {
+    // Create the organization record
+    let organization = await Organization.create({
+      name: name,
+    });
+
+    // Create the user record with the provided data and the organizationId
+    newUser = await User.create({
       name,
       email,
       password: passwordHash,
       role,
-      organizationId,
+      organizationId: organization.id, // Assign the organizationId to the newly created organization's ID
     });
 
-    // Check if the role is "organization"
-    if (role === "organization") {
-      // Create an organization with the adminUserId set to the ID of the newly created user
-      let organization = await Organization.create({
-        name: name,
-        adminUserId: newUser.id, // Set the adminUserId to the ID of the newly created user
-      });
-    }
-
-    let infoObj = { userId: newUser.id };
-    let token = await generateToken(infoObj, secretKey, expiryIn);
-
-    let tokenData = {
-      token: token,
-      userId: newUser.id,
-      type: tokenTypes.ACCESS,
-      expiration: getTokenExpiryTime(token).toLocaleString(),
-    };
-
-    await Token.create(tokenData);
-
-    successResponseData({
-      res,
-      message: "User created successfully",
-      statusCode: HttpStatus.CREATED,
-      tokenData,
-      token,
+    // Set the adminUserId of the organization to the ID of the newly created user
+    organization.adminUserId = newUser.id;
+    await organization.save();
+  } else {
+    // Create the user record with the provided data
+    newUser = await User.create({
+      name,
+      email,
+      password: passwordHash,
+      role,
     });
   }
+
+  let infoObj = { userId: newUser.id };
+  let token = await generateToken(infoObj, secretKey, expiryIn);
+  console.log(existingUser);
+  console.log(token);
+
+  let tokenData = {
+    token: token,
+    userId: newUser.id,
+    type: tokenTypes.ACCESS,
+    expiration: getTokenExpiryTime(token).toLocaleString(),
+  };
+
+  await Token.create(tokenData);
+
+  successResponseData({
+    res,
+    message: "User created successfully",
+    statusCode: HttpStatus.CREATED,
+    token: token,
+  });
 });
 
 export const userLogin = tryCatchWrapper(async (req, res) => {
@@ -159,35 +126,24 @@ export const userLogin = tryCatchWrapper(async (req, res) => {
     }
   }
 });
-
-// export const logoutUser = tryCatchWrapper(async (req, res) => {
-//   const tokenId = req.token.tokenId;
-
-//   //Delete the token which is linked with specific user
-//   await Token.destroy({ where: { id: tokenId } });
-
-//   successResponseData({
-//     res,
-//     message: "Logout Successfully.",
-//     statusCode: HttpStatus.OK,
-//   });
-// });
 export const logoutUser = tryCatchWrapper(async (req, res) => {
-  const tokenId = req.token?.tokenId;
+  const tokenId = req.token.tokenId;
 
+  // Ensure that the token ID is present
   if (!tokenId) {
     throwError({
-      message: "Token ID is missing or invalid",
+      message: "Token ID is missing in the request",
       statusCode: HttpStatus.BAD_REQUEST,
     });
   }
 
-  // Delete the token which is linked with the specific user
+  // Destroy the token associated with the token ID
   await Token.destroy({ where: { id: tokenId } });
 
+  // Send success response
   successResponseData({
     res,
-    message: "Logout Successfully.",
+    message: "Logout Successful",
     statusCode: HttpStatus.OK,
   });
 });

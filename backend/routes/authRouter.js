@@ -7,7 +7,7 @@ import { isAuthorized } from "../middleware/isAuthorized.js";
 import loginSchema from "../validation/userLoginValidation.js";
 import logoutSchema from "../validation/logoutValidation.js";
 
-export const authRouter = Router();
+const authRouter = Router();
 
 authRouter
   .route("/register")
@@ -20,3 +20,5 @@ authRouter
 authRouter
   .route("/logout")
   .patch(validation(logoutSchema), isValidToken, authController.logoutUser);
+
+export default authRouter;

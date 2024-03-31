@@ -123,6 +123,7 @@ const SigninForm = ({
                     </InputAdornment>
                   ),
                 }}
+                helperText="Password must have at least one uppercase letter, one numeric digit, and one special character."
               />
               <MUIError
                 touch={touched.password}
@@ -130,25 +131,6 @@ const SigninForm = ({
                 value={false}
               />
             </Grid>
-
-            {/* <Grid item xs={12}>
-          <DropZoneComp
-            error={touched.userImage && errors.userImage}
-            fullWidth
-            id="userImage"
-            name="userImage"
-            autoComplete="off"
-            value={values.userImage}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            handleImageUpload={handleImageUpload}
-          />
-          <MUIError
-            touch={touched.userImage}
-            error={errors.userImage}
-            value={values.userImage}
-          />
-        </Grid> */}
           </Grid>
           <Button
             id="button"

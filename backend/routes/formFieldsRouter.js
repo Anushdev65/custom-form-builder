@@ -2,6 +2,8 @@ import { Router } from "express";
 import { isValidToken } from "../middleware/isValidToken.js";
 import { isAuthorized } from "../middleware/isAuthorized.js";
 import { formFieldsController } from "../controllers/index.js";
+import validation from "../middleware/validation.js";
+import formFieldsSchema from "../validation/formFieldsValdation.js";
 
 const formFieldsRouter = Router();
 
@@ -21,6 +23,7 @@ formFieldsRouter
 formFieldsRouter
   .route("/:id")
   .patch(
+    // validation(formFieldsSchema),
     isValidToken,
     isAuthorized("organization"),
     formFieldsController.updateFormFields

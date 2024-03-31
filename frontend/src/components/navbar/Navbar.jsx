@@ -18,9 +18,12 @@ import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { styled, useTheme } from "@mui/material/styles";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import { useLogOutMutation } from "../../apiSlice/auth";
 import * as React from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import "../../styles/navbar.css";
+import { removeLevelInfo } from "../../localStorage/localStorage";
 // import { useLogoutUserMutation } from "../../services/api/user";
 // import { removeLevelInfo } from "../../localStorage/localStorage";
 const drawerWidth = 240;
@@ -29,7 +32,7 @@ const navData = [
   {
     name: "Create Form",
     icon: <FoodBankOutlinedIcon />,
-    link: "/home",
+    link: "/form",
   },
   {
     name: "Create Form Fields",
@@ -121,7 +124,7 @@ export default function Navbar() {
   // State for tracking the currently active navigation link
   const [activeLink, setActiveLink] = React.useState("");
 
-  //   const [logout, { data, isSucess }] = useLogoutUserMutation();
+  const [logout, { data, isSucess }] = useLogOutMutation();
 
   // Location object to get the current pathname
   const location = useLocation();
@@ -166,13 +169,13 @@ export default function Navbar() {
     setOpen(false);
   };
 
-  //   const handleLogout = () => {
-  //     logout();
-  //     removeLevelInfo();
-  //     setTimeout(() => {
-  //       window.location.href = "/login";
-  //     }, 3000);
-  //   };
+  const handleLogout = () => {
+    logout();
+    removeLevelInfo();
+    setTimeout(() => {
+      window.location.href = "/login";
+    }, 3000);
+  };
 
   const handleNavLinkClick = (name) => {
     setActiveLink(name);
@@ -273,7 +276,7 @@ export default function Navbar() {
         <List>{renderList(navData)}</List>
 
         <List>
-          {/* <listItem disablePadding sx={{ display: "block" }}>
+          <listItem disablePadding sx={{ display: "block" }}>
             <ListItemButton
               sx={{
                 minHeight: 48,
@@ -293,7 +296,7 @@ export default function Navbar() {
               </ListItemIcon>
               <ListItemText primary="Logout" sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
-          </listItem> */}
+          </listItem>
         </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>

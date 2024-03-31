@@ -1,7 +1,8 @@
 import { Router } from "express";
 
-import { authRouter } from "./authRouter.js";
+import authRouter from "./authRouter.js";
 import formFieldsRouter from "./formFieldsRouter.js";
+import formRouter from "./formRouter.js";
 
 const apiRouter = Router();
 
@@ -14,6 +15,11 @@ const OurRoutes = [
   {
     path: `/form-fields`,
     router: formFieldsRouter,
+  },
+
+  {
+    path: `/form`,
+    router: formRouter,
   },
 ];
 

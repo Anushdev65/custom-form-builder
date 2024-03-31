@@ -1,3 +1,4 @@
+import * as React from "react";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
@@ -9,7 +10,6 @@ import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
-import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import MUIError from "../components/materialComponents/MUIError";
 import MUILoading from "../components/materialComponents/MUILoading";
@@ -17,7 +17,12 @@ import MUIToast from "../components/materialComponents/MUIToast";
 import { setLevelInfo, setUSerInfo } from "../localStorage/localStorage";
 // import { userLoginSchema } from "../schema/YupSchema";
 import { useLoginUserMutation } from "../apiSlice/auth";
+import { useState } from "react";
 import "../styles/login.css";
+import InputAdornment from "@mui/material/InputAdornment";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import IconButton from "@mui/material/IconButton";
 
 const initialValues = {
   password: "",
@@ -42,6 +47,12 @@ export default function LoginFormScreen() {
       loginUser(values);
     },
   });
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handlePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   React.useEffect(() => {
     if (isSuccess) resetForm();
@@ -128,13 +139,13 @@ export default function LoginFormScreen() {
                       label="Email Address"
                       name="email"
                       autoComplete="off"
-                      value={values.email}
+                      value={values?.email}
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />
                     <MUIError
-                      touch={touched.email}
-                      error={errors.email}
+                      touch={touched?.email}
+                      error={errors?.email}
                       value={false}
                     />
                   </Grid>
@@ -145,12 +156,30 @@ export default function LoginFormScreen() {
                       fullWidth
                       name="password"
                       label="Password"
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       id="password"
                       autoComplete="new-password"
-                      value={values.password}
+                      value={values?.password}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      InputProps={{
+                        // Add end adornment for the text field
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={handlePasswordVisibility}
+                              edge="end"
+                            >
+                              {showPassword ? (
+                                <VisibilityOff />
+                              ) : (
+                                <Visibility />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                     <MUIError
                       touch={touched.password}

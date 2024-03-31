@@ -4,6 +4,8 @@ import UserModel from "./tables/user.js";
 import TokenModel from "./tables/token.js";
 import OrganizationModel from "./tables/organization.js";
 import FormFieldsModel from "./tables/formFields.js";
+import FormModel from "./tables/form.js";
+
 const sequelize = new Sequelize(database, "mist-dev", "sqlrookiedev", {
   host: host,
   dialect: "mysql",
@@ -15,6 +17,8 @@ export const Token = TokenModel(sequelize, DataTypes);
 export const Organization = OrganizationModel(sequelize, DataTypes);
 
 export const FormFields = FormFieldsModel(sequelize, DataTypes);
+
+export const Form = FormModel(sequelize, DataTypes);
 
 const db = { User, Token, Organization, FormFields, sequelize };
 

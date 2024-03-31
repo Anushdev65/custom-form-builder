@@ -4,6 +4,7 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 import LoginFormScreen from "./screens/LoginFormScreen";
 import { HomeScreen } from "./screens/organizationViewScreen/HomeScreen";
 import { FormFieldsScreen } from "./screens/organizationViewScreen/FormFieldsScreen";
+import { FormScreen } from "./screens/organizationViewScreen/FormScreen";
 function App() {
   return (
     <Routes>
@@ -13,6 +14,7 @@ function App() {
       <Route element={<ProtectedRoute />}>
         <Route path="/org-home" element={<HomeScreen />} />
         <Route path="/form-field" element={<FormFieldsScreen />} />
+        <Route path="/form" element={<FormScreen />} />
       </Route>
 
       <Route path="/register" element={<SignUpScreen />} />

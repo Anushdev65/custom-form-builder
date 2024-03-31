@@ -29,7 +29,7 @@ export const isValidToken = tryCatchWrapper(async (req, res, next) => {
     } else {
       req.token = {
         token: token,
-        tokenId: tok._id,
+        tokenId: tok.id,
       };
       req.info = {
         ...info,

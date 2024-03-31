@@ -22,7 +22,7 @@ const OrganizationModel = (sequelize) => {
 
       adminUserId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
     },
     {

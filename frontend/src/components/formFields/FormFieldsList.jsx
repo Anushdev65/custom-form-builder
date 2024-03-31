@@ -24,12 +24,8 @@ export const FormFieldsList = () => {
   // Fetch form fields data
   const { data, isLoading, error } = useGetAllFormFieldsQuery();
 
-  const [
-    updateFormFields,
-    { data: updateFood, error: updateError, isSuccess: updateSuccess },
-  ] = useUpdateFormFieldsMutation();
-  const [deleteFormField, { data: formFieldData, error: formfieldError }] =
-    useDeleteFormFieldMutation();
+  const [updateFormFields] = useUpdateFormFieldsMutation();
+  const [deleteFormField] = useDeleteFormFieldMutation();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedField, setSelectedField] = useState(null);
@@ -71,6 +67,11 @@ export const FormFieldsList = () => {
 
   const handleUpdateField = async (updatedData) => {
     try {
+      // Ensure that `type` is always an array
+      if (!Array.isArray(updatedData.type)) {
+        updatedData.type = [updatedData.type];
+      }
+
       // Update the field with the new data
       await updateFormFields({ id: selectedField?.id, body: updatedData });
       // Close the modal
@@ -88,7 +89,7 @@ export const FormFieldsList = () => {
         <CircularProgress />
       ) : error ? (
         <Typography variant="body1" align="center">
-          Error: {error.message}
+          Error: {error?.message}
         </Typography>
       ) : data && data?.data ? (
         <>
@@ -101,7 +102,7 @@ export const FormFieldsList = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data.data.map((field) => (
+                {data?.data?.map((field) => (
                   <TableRow
                     key={field.id}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -111,8 +112,8 @@ export const FormFieldsList = () => {
                       scope="row"
                       style={{ whiteSpace: "nowrap" }}
                     >
-                      {typeof field.type === "string"
-                        ? field.type.split(",").map((type, index) => (
+                      {typeof field?.type === "string"
+                        ? field?.type.split(",").map((type, index) => (
                             <span key={index} style={{ marginRight: "10px" }}>
                               {type.trim()}
                             </span>
@@ -121,13 +122,13 @@ export const FormFieldsList = () => {
                     </TableCell>
                     <TableCell align="right">
                       <IconButton
-                        onClick={() => handleEdit(field.id)}
+                        onClick={() => handleEdit(field?.id)}
                         color="primary"
                       >
                         <EditIcon />
                       </IconButton>
                       <IconButton
-                        onClick={() => handleDelete(field.id)}
+                        onClick={() => handleDelete(field?.id)}
                         color="secondary"
                       >
                         <DeleteIcon />
@@ -138,12 +139,14 @@ export const FormFieldsList = () => {
               </TableBody>
             </Table>
           </TableContainer>
-          <EditFieldModal
-            isOpen={isModalOpen}
-            onClose={handleCloseModal}
-            field={selectedField}
-            onUpdateField={handleUpdateField}
-          />
+          {selectedField && (
+            <EditFieldModal
+              isOpen={isModalOpen}
+              onClose={handleCloseModal}
+              field={selectedField}
+              onUpdateField={handleUpdateField}
+            />
+          )}
         </>
       ) : null}
     </div>
