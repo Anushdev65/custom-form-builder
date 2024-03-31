@@ -35,7 +35,7 @@ const sequelize = new Sequelize("database", "username", "password", {
 -async function syncDatabase() {
   // await sequelize.sync({ alter: true }); "Uncomment this method and start the project to load tables inside your database "
 }
-
+## Use npm run dev command to start the project
 
 ## API Endpoints
 
